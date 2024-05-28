@@ -1,37 +1,46 @@
+import { useReactNavigationDevTools } from '@dev-plugins/react-navigation';
+import { Stack, useNavigationContainerRef } from 'expo-router';
+import { AuthContextProvider } from '@/hooks/authContext';
+import { StatusBar } from 'expo-status-bar';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { useColorScheme } from 'react-native';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+// settings for new navigation based on auth state
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+export const unstable_settings = {
+    initialRouteName: '(app)',
+};
+
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const navigationRef = useNavigationContainerRef();
+    useReactNavigationDevTools(navigationRef);
+    return <RootLayoutNav />;
 
-  if (!loaded) {
-    return null;
-  }
+}
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
-  );
+function RootLayoutNav() {
+    return (
+        <Providers>
+            <Stack>
+                <Stack.Screen name="(app)" options={{ headerShown: false }} />
+                <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+                <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+            </Stack>
+        </Providers>
+    )
+
+}
+
+function Providers({ children }: { children: React.ReactNode }) {
+    const colorScheme = useColorScheme();
+    return (
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <AuthContextProvider>
+                <StatusBar style="auto" />
+                {children}
+            </AuthContextProvider>
+        </ThemeProvider>
+    );
 }
