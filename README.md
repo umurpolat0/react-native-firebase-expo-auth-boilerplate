@@ -10,7 +10,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-3. Start the app
+2. Configure Firebase API KEYS.
 
   - Create a firebase project here: [FIREBASE Console](https://console.firebase.google.com). And Download 'GoogleService-Info.plist' of your project.
     If your GoogleService-Info.plist doesn't have 'CLIENT_ID' and 'REVERSE_CLIENT_ID' go to [Google API & Services - Credentials](https://console.cloud.google.com/apis/credentials). And make sure you have 'OAuth 2.0 Client ID' in there. After making sure of having a 'OAuth 2.0 Client ID' download the '.plist' folder via download icon.
